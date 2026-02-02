@@ -35,7 +35,7 @@ if st.button("Predict"):
     latest = df[['rsi', 'macd', 'sma', 'ema']].iloc[-1:]
     prediction = model.predict(latest)[0]
 
-    last_price = df['Close'].iloc[-1]
+    last_price = float(df['Close'].iloc[-1])
 
     st.subheader("📌 Prediction Result")
     st.text(f"Latest Price: {currency}{last_price:.2f}")
