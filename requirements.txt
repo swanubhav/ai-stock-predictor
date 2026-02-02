@@ -10,4 +10,3 @@ joblib
 vaderSentiment
 transformers
 torch
-scikit-learn==1.3.2
