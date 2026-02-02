@@ -1,44 +1,46 @@
 import yfinance as yf
 import pandas as pd
 import joblib
-
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
-
 from utils.indicators import add_indicators
 
-# Download stock data (US stock for training)
-ticker = "AAPL"
-df = yf.download(ticker, start="2018-01-01", end="2024-01-01")
+# Multiple stocks for generalization
+stocks = [
+    "AAPL", "MSFT", "GOOGL", "AMZN",
+    "TSLA", "META",
+    "RELIANCE.NS", "TCS.NS", "INFY.NS", "HDFCBANK.NS"
+]
 
-df.dropna(inplace=True)
+all_data = []
 
-# Add technical indicators
-df = add_indicators(df)
-df.dropna(inplace=True)
+for ticker in stocks:
+    df = yf.download(ticker, start="2018-01-01", end="2024-01-01")
+    if df.empty:
+        continue
 
-# Target: next-day price movement
-df['target'] = (df['Close'].shift(-1) > df['Close']).astype(int)
-df.dropna(inplace=True)
+    df = add_indicators(df)
+    df['target'] = (df['Close'].shift(-1) > df['Close']).astype(int)
+    df.dropna(inplace=True)
+    all_data.append(df)
 
-X = df[['rsi', 'macd', 'sma', 'ema']]
-y = df['target']
+data = pd.concat(all_data)
 
-# Time-series split
+X = data[['rsi', 'macd', 'sma', 'ema']]
+y = data['target']
+
 X_train, X_test, y_train, y_test = train_test_split(
-    X, y, shuffle=False, test_size=0.2
+    X, y, test_size=0.2, shuffle=True, random_state=42
 )
 
-# Train model
-model = RandomForestClassifier(n_estimators=200, random_state=42)
+model = RandomForestClassifier(
+    n_estimators=300,
+    max_depth=10,
+    random_state=42
+)
 model.fit(X_train, y_train)
 
-# Evaluate
-accuracy = accuracy_score(y_test, model.predict(X_test))
-print("ML Model Accuracy:", accuracy)
+joblib.dump(model, "models/stock_model.pkl")
+print("✅ Generic stock prediction model trained & saved")
 
-# Save model
-joblib.dump(model, "models/ml_model.pkl")
-print("ML model saved successfully.")
 
