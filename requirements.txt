@@ -3,7 +3,8 @@ pandas
 scikit-learn
 yfinance
 ta
-streamlit
+streamlit==1.30.0
+altair==4.2.2
 joblib
 #tenserflow
 vaderSentiment
