@@ -17,7 +17,7 @@ symbol = st.text_input("Enter Stock Symbol", "AAPL")
 if st.button("Predict"):
     ticker, currency = format_ticker(symbol, market)
 
-    df = yf.download(ticker, period="6mo")
+    df = yf.download(ticker, period="12mo")
 
     if df is None or df.empty:
         st.error("No data found. Check stock symbol.")
