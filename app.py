@@ -47,5 +47,5 @@ if st.button("Predict"):
 
     st.subheader("📊 Recent Price Trend")
    # st.line_chart(df['Close'])
-   st.line_chart(df["Close"].tail(200))
+    st.line_chart(df["Close"].tail(200))
 
