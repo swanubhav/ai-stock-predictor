@@ -15,7 +15,7 @@ stocks = [
 all_data = []
 
 for ticker in stocks:
-    df = yf.download(ticker, start="2018-01-01", end="2024-01-01")
+    df = yf.download(ticker, start="2018-01-01", end="2026-03-11")
     if df.empty:
         continue
 
